@@ -9,7 +9,7 @@
 </head>
 <body>
   <div id="unity-container" style="position: absolute; width: 100%; height: 100%;">
-    <canvas id="unity-canvas" style="position: center; width: 100%; height: 100%; "></canvas>
+    <canvas id="unity-canvas" style="position: center; width: 100%; height: 100%;"></canvas>
     <div id="unity-loading-bar">
       <div id="unity-logo"></div>
       <div id="unity-progress-bar-empty">
@@ -51,11 +51,11 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/Yandex.loader.js";
+      var loaderUrl = buildUrl + "/Vk.loader.js";
       var config = {
-        dataUrl: buildUrl + "/Yandex.data",
-        frameworkUrl: buildUrl + "/Yandex.framework.js",
-        codeUrl: buildUrl + "/Yandex.wasm",
+        dataUrl: buildUrl + "/Vk.data",
+        frameworkUrl: buildUrl + "/Vk.framework.js",
+        codeUrl: buildUrl + "/Vk.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
         productName: "Don't touch yhe spikes",
@@ -84,7 +84,7 @@
         const screenHeight = window.screen.height;
         const screenWidth = window.screen.width;
 
-        container.style.width = 71.4 * screenHeight / screenWidth + "%";
+        container.style.width = 71.4 * screenHeight / screenWidth + "%"; // iFrame 630x800
       }
       loadingBar.style.display = "block";
 
@@ -107,101 +107,50 @@
       document.body.appendChild(script);
     </script>
 
-    <!-- Yandex Games SDK -->
-    <script src="https://yandex.ru/games/sdk/v2"></script>
+    <!-- VKontakte Games SDK -->
 
-    <script>
+    <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
 
-      var player;
-      var sdk;
-      var lb;
+    <script type="text/javascript">
 
-      YaGames.init({
-        adv:{
-          onAdvClose: wasShown =>{console.info('adv closed!');
-        }
-      }
-    })
-      .then(ysdk => {
-        sdk = ysdk;
-        //sdk.adv.showFullscreenAdv({callbacks:{}});
-      });
+      vkBridge.send('VKWebAppInit');
 
       function auth(){
-        initPlayer().then(() =>{
-                getUser();
-            }).catch(err => {
-             sdk.auth.openAuthDialog().then(() => {
-              initPlayer();
-              getUser();
-          });
-          });
-        }
-
-
-    function initPlayer(){
-        console.log('InitPlayerTry')
-        GetLeaderBoard();
-        return sdk.getPlayer().then(_player => {
-                console.log('InitPlayer2');
-                player = _player;
-            });}
-
-      function getUser(){
-          console.log('try to get Name');
-          var data = player.getName();
-          unityI.SendMessage('YandexSDK', 'AuthenticateSuccess', data);
+        vkBridge.send('VKWebAppGetUserInfo').then(_info => {
+          console.log(_info);
+        });
       }
 
       function showFullscrenAd(){
-        sdk.adv.showFullscreenAdv({
-          callbacks: {
-            onClose: function(wasShown) {},
-            onError: function(error) {}
+        vkBridge.send('VKWebAppShowNativeAds', {ad_format: 'interstitial'}).then(data => {
+          if(data.result){
+            console.log("Interstitial ad was shown success");
+          } else {
+            console.log("Interstitial ad was shown with error");
           }
-        })
+        });
       }
 
-
-    function showRewardedAd(id){
-        sdk.adv.showRewardedVideo({
-          callbacks: {
-            onOpen: () => {},
-            onRewarded: () => {
-              unityI.SendMessage('YandexSDK', 'Rewarded');
-              console.log('Rewarded! Id: ' + id);},
-              onClose: () => {},
-              onError: (e) => {
-                console.log('Error while open video ad:', e);
-              }
-            }
-          })
+      function showRewardedAd(){
+        vkBridge.send('VKWebAppShowNativeAds', {ad_format: 'reward'}).then(data => {
+          if(data.result){
+            console.log("Reward ad was shown success");
+            unityI.SendMessage('VKSDK', 'Rewarded');
+          } else {
+            console.log("Reward ad was shown with error");
+          }
+        });
       }
 
-    function GetLeaderBoard(){
-      console.log('GrtLeaderBoard');
-      sdk.getLeaderboards().then(_lb => lb = _lb);
-            }
+      function appShare(){
+        vkBridge.send('VKWebAppShare', 
+        {
+          link: 'https://vk.com/app51503695'
+        });
+      }
 
-    function SetLeaderBoard(score){
-      sdk.getLeaderboards()
-          .then(lb => {
-            console.log(score);
-            lb.setLeaderboardScore('LeaderBoard', score);});
-        }
-
-      function GetLeaderBoardEntry(){
-        sdk.getLeaderboards()
-          .then(lb => lb.getLeaderboardPlayerEntry('LeaderBoard'))
-          .then(res => {
-            console.log(res);
-            unityI.SendMessage('YandexSDK', 'LeaderboardPlayerReady', JSON.stringify(res));
-          }).catch(err => {
-              if(err.code === 'LEADERBOARD_PLAYER_NOT_PRESENT') {
-                console.log('LEADERBOARD_PLAYER_NOT_PRESENT');
-                unityI.SendMessage('YandexSDK', 'SetNewPlayer');
-              }
-          });
+      function appAddToFavorites(){
+        vkBridge.send('VKWebAppAddToFavorites');
       }
 
   </script>
