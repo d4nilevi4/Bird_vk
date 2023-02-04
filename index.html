@@ -73,7 +73,10 @@
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         container.className = "unity-mobile";
         
+        container.style.position = "absolute";
         canvas.style.position = "absolute";
+
+        canvas.style.padding-top = "100px";
 
 
         canvas.style.display = "inline-block";
