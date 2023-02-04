@@ -72,9 +72,11 @@
 
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         container.className = "unity-mobile";
-        // Avoid draining fillrate performance on mobile devices,
-        // and default/override low DPI mode on mobile browsers.
-        canvas.style.display = "inline-block";
+        
+        canvas.style.position = "absolute";
+
+
+        canvas.style.display = "block";
         canvas.style.width = "100%";
         canvas.style.height = "100%";
       } else {
