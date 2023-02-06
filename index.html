@@ -73,15 +73,7 @@
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         container.className = "unity-mobile";
         
-        container.style.position = "absolute";
-        canvas.style.position = "absolute";
-
-        //canvas.style.padding-top = "20px";
-
-
-        canvas.style.display = "inline-block";
-        canvas.style.width = "100%";
-        canvas.style.height = "100%";
+        config.devicePixelRatio = 1;
       } else {
         container.className = "unity-desktop";
         canvas.style.height = "100%";
