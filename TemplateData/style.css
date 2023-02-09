@@ -2,12 +2,6 @@ body { padding: 0; margin: 0 }
 #unity-container { position: absolute }
 #unity-container.unity-desktop { 
 	background: url('back.png') no-repeat center;
-	display: block;
-    margin-left: auto;
-    margin-right: auto;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, 0%);
 }
 #unity-container.unity-mobile { width: 100%; height: 100% }
 #unity-canvas { background: #000000 }
