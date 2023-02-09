@@ -113,13 +113,15 @@
 
       vkBridge.subscribe((e) => {
         if (e.detail.type === 'VKWebAppViewHide') {
-          unityI.SendMessage('VKSDK', 'AppViewHide');
+        	console.log('VKWebAppViewHide');
+          	unityI.SendMessage('VKSDK', 'AppViewHide');
         }
       });
 
       vkBridge.subscribe((e) => {
         if (e.detail.type === 'VKWebAppViewRestore') {
-          unityI.SendMessage('VKSDK', 'AppViewRestore');
+        	console.log('VKWebAppViewRestore');
+          	unityI.SendMessage('VKSDK', 'AppViewRestore');
         }
       });
 
