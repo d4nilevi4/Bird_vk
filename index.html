@@ -109,6 +109,8 @@
 
     <script type="text/javascript">
 
+    	//Version 1
+
       vkBridge.send('VKWebAppInit');
 
       vkBridge.subscribe((e) => {
@@ -117,11 +119,11 @@
         }
       });
 
-      vkBridge.subscribe((e) => {
+      /*vkBridge.subscribe((e) => {
         if (e.detail.type === 'VKWebAppViewRestore') {
           unityI.SendMessage('VKSDK', 'AppViewRestore');
         }
-      });
+      });*/
 
       function auth(){
         vkBridge.send('VKWebAppGetUserInfo').then(_info => {
